@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+     <declare-styleable name="SlideView">
+         <attr name="init_opened" format="boolean" />
+         <attr name="location" format="string" />
+         <attr name="duration" format="integer" />
+         <attr name="distance" format="dimension" />
+     </declare-styleable>
+</resources>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sak="http://schemas.android.com/apk/res/jp.takes.apps.recordtracker"
+    
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/rec"
+        android:text=" "
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#FF0000"
+        android:textSize="30sp" />
+
+    <Chronometer
+        android:id="@+id/chronometer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="2.00"
+        android:background="@drawable/stopwatch"
+        android:format="%s"
+        android:gravity="center"
+        android:textSize="48sp" />
+
+    <Button
+        android:id="@+id/recordButton"
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_weight="1"
+        android:background="@drawable/startbutton_stateful"
+        android:onClick="onClicRecord"
+        android:textSize="36sp" />
+
+    <Button
+        android:id="@+id/viewTracksbutton"
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_margin="30dp"
+        android:layout_weight="1"
+        android:onClick="onClicDisplayTrackList"
+        android:soundEffectsEnabled="true"
+        android:text="履歴をみる"
+        android:textSize="36sp" />
+
+    <!--         <jp.takes.apps.recordtracker.SlideView
+            android:id="@+id/myview1"
+            android:layout_width="match_parent"
+            android:layout_height="0dip"
+            android:layout_weight="1.0"
+            android:layout_marginTop="10dp"
+            sak:distance="480dp"
+            sak:duration="1000"
+            sak:init_opened="true"
+            sak:location="right" >
+	        <TextView
+	            android:id="@+id/textView1"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:layout_centerInParent="true"
+	            android:background="#696969"
+	            android:gravity="center"
+	            android:onClick="onClicDisplayTrackList"
+	            android:text="履歴をみる"
+	            android:textColor="#ffff"
+	            android:textSize="32sp" />
+
+      </jp.takes.apps.recordtracker.SlideView>
+       -->
+</LinearLayout>
