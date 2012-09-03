@@ -20,7 +20,7 @@
         <uses-library android:name="com.google.android.maps" />
         
         <activity
-            android:name=".TrackMapActivity"
+            android:name=".Map.TrackMapActivity"
             android:label="@string/title_activity_main" android:screenOrientation="nosensor">
         </activity>
         <activity android:name="RecordActivity" android:screenOrientation="nosensor">
@@ -29,7 +29,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
                 </intent-filter>
         </activity>
-        <activity android:name="TracksListActivity" android:screenOrientation="nosensor"></activity>
+        <activity android:name=".TracksListActivity" android:screenOrientation="nosensor"></activity>
+        <service android:name=".service.GPSCollectService"></service>
     </application>
 
 </manifest>

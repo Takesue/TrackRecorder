@@ -1,4 +1,4 @@
-package jp.takes.apps.recordtracker;
+package jp.takes.apps.recordtracker.map;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.OverlayItem;

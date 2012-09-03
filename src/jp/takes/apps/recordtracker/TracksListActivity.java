@@ -1,5 +1,7 @@
 package jp.takes.apps.recordtracker;
 
+import jp.takes.apps.recordtracker.db.TracksDBHelper;
+import jp.takes.apps.recordtracker.map.TrackMapActivity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;

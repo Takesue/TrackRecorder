@@ -1,6 +1,13 @@
-package jp.takes.apps.recordtracker;
+package jp.takes.apps.recordtracker.map;
 
 import java.util.ArrayList;
+
+import jp.takes.apps.recordtracker.R;
+import jp.takes.apps.recordtracker.R.drawable;
+import jp.takes.apps.recordtracker.R.id;
+import jp.takes.apps.recordtracker.R.layout;
+import jp.takes.apps.recordtracker.R.menu;
+import jp.takes.apps.recordtracker.db.TracksDBHelper;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;

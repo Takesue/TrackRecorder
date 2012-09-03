@@ -1,4 +1,4 @@
-package jp.takes.apps.recordtracker;
+package jp.takes.apps.recordtracker.map;
 
 import android.graphics.Canvas;
 import android.graphics.Color;

@@ -1,4 +1,4 @@
-package jp.takes.apps.recordtracker;
+package jp.takes.apps.recordtracker.db;
 
 import android.content.ContentValues;
 import android.content.Context;

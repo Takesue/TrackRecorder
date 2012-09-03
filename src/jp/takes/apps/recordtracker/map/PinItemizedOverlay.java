@@ -1,7 +1,8 @@
-package jp.takes.apps.recordtracker;
+package jp.takes.apps.recordtracker.map;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 import android.graphics.drawable.Drawable;
 
