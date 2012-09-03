@@ -21,12 +21,13 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.util.Log;
 import android.widget.Toast;
 
 public class GPSCollectService extends Service implements LocationListener{
 
-	final static String TAG = "MyService";
+	final static String TAG = "GPSCollectService";
 	
 	// ロケーションマネージャ
 	private LocationManager locationManager = null;
@@ -36,6 +37,8 @@ public class GPSCollectService extends Service implements LocationListener{
 	private TracksDBHelper tracksDB = null;
 	// 開始時間
 	private long startTimeMillis = 0;
+	// 開始時間
+	private long elapsedRealtime = 0;
 	// GPS取得数
 	private Integer gpsCnt = 0;
 
@@ -49,6 +52,9 @@ public class GPSCollectService extends Service implements LocationListener{
 	public void onCreate() {
 		super.onCreate();
 		Log.d(GPSCollectService.TAG, "onCreate");
+		
+		// タイマー用の開始時間設定
+		this.elapsedRealtime = SystemClock.elapsedRealtime();
 
 		// 履歴名設定
 		this.startTimeMillis = System.currentTimeMillis();
@@ -70,7 +76,21 @@ public class GPSCollectService extends Service implements LocationListener{
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d(GPSCollectService.TAG, "onStartCommand");
+		
+		this.createBroadcastIntent();
+		
 		return Service.START_STICKY;
+	}
+	
+	/**
+	 * ブロードキャストレシーバでGPS開始時刻を送信する。
+	 */
+	private void createBroadcastIntent() {
+		
+		Intent broadcastIntent = new Intent();
+		broadcastIntent.putExtra("starttime", String.valueOf(this.elapsedRealtime));
+		broadcastIntent.setAction("SEND_START_TIME");
+		this.getBaseContext().sendBroadcast(broadcastIntent);
 	}
 
 	@Override
@@ -85,13 +105,13 @@ public class GPSCollectService extends Service implements LocationListener{
 		//  開始時間からの差分で経過時間を算出
 		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss SSS");
 		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-		String time = dateFormat.format(new Date(System.currentTimeMillis() - startTimeMillis));
+		String time = dateFormat.format(new Date(System.currentTimeMillis() - this.startTimeMillis));
 
 		// 履歴名：記録開始日付（表示用）
-		String recStart = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date(startTimeMillis));
+		String recStart = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date(this.startTimeMillis));
 
 		// キー：記録開始日付＋時間（内部処理での使用用途）
-		String key = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date(startTimeMillis));
+		String key = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date(this.startTimeMillis));
 
 		// 総移動距離を取得
 		String distance = this.getDistance(key);
@@ -99,7 +119,6 @@ public class GPSCollectService extends Service implements LocationListener{
 		Log.d("distance", distance);
 		
 		this.tracksDB.insertTracksData(recStart, key, time, "走行時間：" + time.substring(0, 8) + "    走行距離：" + distance + "m");
-		
 	}
 	
 	private String getDistance(String key) {

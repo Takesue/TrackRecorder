@@ -20,7 +20,7 @@
         <uses-library android:name="com.google.android.maps" />
         
         <activity
-            android:name=".Map.TrackMapActivity"
+            android:name=".map.TrackMapActivity"
             android:label="@string/title_activity_main" android:screenOrientation="nosensor">
         </activity>
         <activity android:name="RecordActivity" android:screenOrientation="nosensor">
