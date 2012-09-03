@@ -12,6 +12,11 @@ import com.google.android.maps.Overlay;
 import com.google.android.maps.Projection;
 
 
+/**
+ * 線を引くレイヤー
+ * @author take
+ *
+ */
 public class LineOverlay extends Overlay {
 
 	private GeoPoint[] geoList = null;

@@ -8,24 +8,32 @@ import android.graphics.drawable.Drawable;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
 
+/**
+ * 指定座標にインスタンス生成時に指定した画像をマーカーとして置く
+ * @author take
+ *
+ */
 public class PinItemizedOverlay extends ItemizedOverlay<PinOverlayItem> {
 	
 	private List<GeoPoint> points = new ArrayList<GeoPoint>();
 
+	/**
+	 * コンストラクタ
+	 * @param defaultMarker  マーカーの画像
+	 */
 	public PinItemizedOverlay(Drawable defaultMarker) {
-		super( boundCenterBottom(defaultMarker) );
-
+		super(boundCenterBottom(defaultMarker));
 	}
 
 	@Override
 	protected PinOverlayItem createItem(int i) {
-		GeoPoint point = points.get(i);
+		GeoPoint point = this.points.get(i);
 		return new PinOverlayItem(point);
 	}
 
 	@Override
 	public int size() {
-		return points.size();
+		return this.points.size();
 	}
 
 	public void addPoint(GeoPoint point) {

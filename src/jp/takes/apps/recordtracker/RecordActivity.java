@@ -26,6 +26,11 @@ import android.widget.Chronometer;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * GPS情報取得開始／停止画面
+ * @author take
+ *
+ */
 public class RecordActivity extends Activity implements LocationListener {
 
 	// ロケーションマネージャ
@@ -44,8 +49,6 @@ public class RecordActivity extends Activity implements LocationListener {
 	private MediaPlayer startSound = null; 
 	private MediaPlayer stopSound = null; 
 
-//	final SlideViewGroup vg = new SlideViewGroup();
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -62,9 +65,6 @@ public class RecordActivity extends Activity implements LocationListener {
 		this.startSound = MediaPlayer.create(this, R.raw.start);
 		this.stopSound = MediaPlayer.create(this, R.raw.stop);
 		
-//		SlideView sView1 = (SlideView)this.findViewById(R.id.myview1);
-//		vg.add(sView1);     // 0
-
 	}
 	
 
@@ -82,9 +82,9 @@ public class RecordActivity extends Activity implements LocationListener {
 	public void onClicRecord(View v) {
 		
 		// ボタン押下で振動
-		((Vibrator)getSystemService(VIBRATOR_SERVICE)).vibrate(50);
+		((Vibrator)this.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(50);
 
-		if(!isStart) {
+		if(!this.isStart) {
 
 			// 開始音を鳴らす
 			this.startSound.start();
@@ -163,16 +163,11 @@ public class RecordActivity extends Activity implements LocationListener {
 			
 			this.tracksDB.insertTracksData(recStart, key, time, "走行時間：" + time.substring(0, 8) + "    走行距離：" + distance + "m");
 			
-			// GPS情報書き込み用DBのログ出力
-			dbLogPrint();
-
 			TextView textView = (TextView)this.findViewById(R.id.rec);
 			textView.setText(" ");
 
 			// ボタンを開始ボタンに切り替え
 			Button button = (Button)this.findViewById(R.id.recordButton);
-//			button.setText("□ START");
-//			button.setTextColor(Color.BLACK);
 			button.setBackgroundDrawable((Drawable)this.getResources().getDrawable(R.drawable.startbutton_stateful));
 			
 			// 記録が終了したので、ボタン無効化解除
@@ -184,33 +179,6 @@ public class RecordActivity extends Activity implements LocationListener {
 			this.tracksDB = null;		// クリア
 		}
 		
-	}
-	
-	
-	public void dbLogPrint() {
-		this.tracksDB.getReadableDatabase();
-		Cursor cursor = this.tracksDB.getGPSDataList();
-
-		this.startManagingCursor(cursor);
-		if(cursor != null) {
-			if (cursor.moveToFirst()) {
-				int iRecCnt = cursor.getCount();
-				for (int i = 0; i < iRecCnt; i++) {
-					Log.d("DB RECORD",
-							" ," + cursor.getString(0)
-							+" ," + cursor.getString(1)
-							+" ," + cursor.getString(2)
-							+" ," + cursor.getString(3)
-							+" ," + cursor.getString(4)
-							+" ," + cursor.getString(5)
-							+" ," + cursor.getString(6)
-							);
-					cursor.moveToNext();
-				}
-			}
-			cursor.close();
-		}
-		this.tracksDB.close();
 	}
 	
 	private String getDistance(String key){
@@ -276,19 +244,14 @@ public class RecordActivity extends Activity implements LocationListener {
 
 	@Override
 	public void onProviderDisabled(String arg0) {
-		// TODO 自動生成されたメソッド・スタブ
-		
 	}
 
 	@Override
 	public void onProviderEnabled(String provider) {
-		// TODO 自動生成されたメソッド・スタブ
-		
 	}
 
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
-		// TODO 自動生成されたメソッド・スタブ
 	}
 
 	/**
@@ -298,7 +261,7 @@ public class RecordActivity extends Activity implements LocationListener {
 	 */
 	public void onClicDisplayTrackList(View v) {
 		// ボタン押下で振動
-		((Vibrator)getSystemService(VIBRATOR_SERVICE)).vibrate(50);
+		((Vibrator)this.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(50);
 
 		Intent i = new Intent(this, TracksListActivity.class);
 		this.startActivity(i);

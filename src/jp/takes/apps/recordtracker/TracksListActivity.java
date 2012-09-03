@@ -13,7 +13,11 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
-
+/**
+ * 履歴一覧画面のクラス
+ * @author take
+ *
+ */
 public class TracksListActivity extends ListActivity implements OnItemLongClickListener{
 
 	@Override
@@ -22,8 +26,9 @@ public class TracksListActivity extends ListActivity implements OnItemLongClickL
 		this.setContentView(R.layout.trackslist);
 		
 		ListView list = (ListView)this.findViewById(android.R.id.list);
-		list.setOnItemLongClickListener(this);
 		
+		// 長押しのリスナを設定
+		list.setOnItemLongClickListener(this);
 	}
 	
 	@Override
@@ -32,14 +37,20 @@ public class TracksListActivity extends ListActivity implements OnItemLongClickL
 		this.showViewList();
 	}
 
+	
+	/**
+	 * リストに履歴情報を設定する
+	 */
 	private void showViewList () {
 		
+		// DBアクセス用インスタンス生成
 		TracksDBHelper tracksDB = new TracksDBHelper(this);
-
+		// 履歴一覧情報をDBから取得する
 		Cursor cursor = tracksDB.getTracksList();
-		this.startManagingCursor(cursor);
-
+		
 		if(cursor != null) {
+			// カーソルの管理を開始
+			this.startManagingCursor(cursor);
 			SimpleCursorAdapter adapter = new SimpleCursorAdapter(
 					this, android.R.layout.simple_list_item_2,
 					cursor,
@@ -50,16 +61,21 @@ public class TracksListActivity extends ListActivity implements OnItemLongClickL
 		tracksDB.close();
 	}
 	
+	
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		
+		// 押されたアイテムを元に、対象の情報をDBから抽出する。
 		TracksDBHelper tracksDB = new TracksDBHelper(this);
 		Cursor cursor = tracksDB.getTracksList(String.valueOf(id));
-		
+
+		// カーソルの管理を開始　いる？
 		this.startManagingCursor(cursor);
-		int idx = cursor.getColumnIndex(tracksDB.KEY);
 		cursor.moveToFirst();
+		int idx = cursor.getColumnIndex(tracksDB.KEY);
+		
+		//  * GoogleMap表示画面へ遷移
 		Intent i = new Intent(this, TrackMapActivity.class);
 		i.putExtra("key", cursor.getString(idx));
 		this.startActivity(i);
@@ -70,6 +86,7 @@ public class TracksListActivity extends ListActivity implements OnItemLongClickL
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> arg0, View v, int position, long id) {
+		// 履歴アイテムを長押しされた場合、押下された情報の削除処理をおこなう。
 		final TracksListActivity currentAct = this;
 		final TracksDBHelper tracksDB = new TracksDBHelper(this);
 		Cursor cursor = tracksDB.getTracksList(String.valueOf(id));
@@ -78,6 +95,7 @@ public class TracksListActivity extends ListActivity implements OnItemLongClickL
 		final String key = cursor.getString(cursor.getColumnIndex(tracksDB.KEY));
 		String name = cursor.getString(cursor.getColumnIndex(tracksDB.TRACKS_NAME));
 
+		// 削除確認のポップアップ生成
 		AlertDialog.Builder ab = new AlertDialog.Builder(this);
 		ab.setTitle("履歴削除");
 		ab.setMessage("[" + name +"]を削除しますか？" );
@@ -85,9 +103,10 @@ public class TracksListActivity extends ListActivity implements OnItemLongClickL
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
+						// 「はい」を選択されたら削除する
 						tracksDB.deleteDataForKey(key);
 						tracksDB.close();
-						// 削除した状態で再表示
+						// 1行削除したリストを再表示
 						currentAct.showViewList();
 						Toast.makeText(currentAct, "削除しました。", Toast.LENGTH_SHORT).show();
 
@@ -102,8 +121,6 @@ public class TracksListActivity extends ListActivity implements OnItemLongClickL
 		});
 		ab.show();
 		
-		
-
 		return true;
 	}
 	

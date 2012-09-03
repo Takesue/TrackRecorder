@@ -14,6 +14,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.widget.Toast;
 
+/**
+ * GoogleMap表示画面クラス
+ * @author take
+ *
+ */
 public class TrackMapActivity extends MapActivity {
 
 	private MapController m_controller;
@@ -88,7 +93,7 @@ public class TrackMapActivity extends MapActivity {
 		map.getOverlays().add(lineOverlay);
 		
 		// ピンを置く
-		Drawable pin = getResources().getDrawable(R.drawable.pin);
+		Drawable pin = this.getResources().getDrawable(R.drawable.pin);
 		PinItemizedOverlay pinOverlay = new PinItemizedOverlay(pin);
 		// GPSの最初と最後にピンを設定する
 		pinOverlay.addPoint(this.geoPoints.get(0));

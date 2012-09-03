@@ -9,6 +9,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.location.Location;
 import android.util.Log;
 
+/**
+ * GPS関連のDB情報アクセス用クラス
+ * @author take
+ *
+ */
 public class TracksDBHelper extends SQLiteOpenHelper {
 
 	static final String name = "tracks.db";	// DB Name
@@ -43,6 +48,10 @@ public class TracksDBHelper extends SQLiteOpenHelper {
 	// INSERT時に使用するContentValues
 	public ContentValues contentValues = null;
 
+	/**
+	 * コンストラクタ
+	 * @param context
+	 */
 	public TracksDBHelper(Context context) {
 		super(context, name, factory, version);
 	}
@@ -80,22 +89,20 @@ public class TracksDBHelper extends SQLiteOpenHelper {
 	
 	@Override
 	public synchronized SQLiteDatabase getWritableDatabase() {
-		if (db != null) {
-			db.close();
-			db = null;
+		if (this.db != null) {
+			this.db.close();
+			this.db = null;
 		}
-		db = super.getWritableDatabase();
-		return db;
+		return super.getWritableDatabase();
 	}
 
 	@Override
 	public synchronized SQLiteDatabase getReadableDatabase() {
-		if (db != null) {
-			db.close();
-			db = null;
+		if (this.db != null) {
+			this.db.close();
+			this.db = null;
 		}
-		db = super.getReadableDatabase();
-		return db; 
+		return super.getReadableDatabase();
 	}
 	
 	/**
@@ -107,11 +114,11 @@ public class TracksDBHelper extends SQLiteOpenHelper {
 	 */
 	private void putTracksDataToContentValue(String name, String key, String reqTime, String distance) {
 		
-		contentValues = new ContentValues();
-		contentValues.put(this.TRACKS_NAME, name);				// デフォルトでは日付
-		contentValues.put(this.KEY, key);						// GPS情報との連携に使用するkey
-		contentValues.put(this.TRACKS_TIME, reqTime);			// 所要時間
-		contentValues.put(this.DISTANCE, distance);				// 移動距離
+		this.contentValues = new ContentValues();
+		this.contentValues.put(this.TRACKS_NAME, name);				// デフォルトでは日付
+		this.contentValues.put(this.KEY, key);						// GPS情報との連携に使用するkey
+		this.contentValues.put(this.TRACKS_TIME, reqTime);			// 所要時間
+		this.contentValues.put(this.DISTANCE, distance);			// 移動距離
 	}
 
 	/**
@@ -119,16 +126,15 @@ public class TracksDBHelper extends SQLiteOpenHelper {
 	 */
 	private void putGPSDataToContentValue(String name, int num, Location location) {
 
-		contentValues = new ContentValues();
-		contentValues.put(this.TRACKS_NAME, name);
-		contentValues.put(this.TRACKS_NUM, num);
-		contentValues.put(this.LATITUDE, location.getLatitude());
-		contentValues.put(this.LONGITUDE, location.getLongitude());
-		contentValues.put(this.ALTITUDE, location.getAltitude());
-		contentValues.put(this.ACCURACY, location.getAccuracy());
-		contentValues.put(this.TIME, location.getTime());
-		contentValues.put(this.SPEED, location.getSpeed());
-//		contentValues.put(this.SPEED, 1.0);
+		this.contentValues = new ContentValues();
+		this.contentValues.put(this.TRACKS_NAME, name);
+		this.contentValues.put(this.TRACKS_NUM, num);
+		this.contentValues.put(this.LATITUDE, location.getLatitude());
+		this.contentValues.put(this.LONGITUDE, location.getLongitude());
+		this.contentValues.put(this.ALTITUDE, location.getAltitude());
+		this.contentValues.put(this.ACCURACY, location.getAccuracy());
+		this.contentValues.put(this.TIME, location.getTime());
+		this.contentValues.put(this.SPEED, location.getSpeed());
 		
 		Log.d("DB RECORD",
 				" name = " + name
@@ -144,58 +150,58 @@ public class TracksDBHelper extends SQLiteOpenHelper {
 
 	// 走行履歴テーブルにレコードをインサートする
 	public void insertTracksData(String name, String key, String reqTime, String distance) {
-		this.getWritableDatabase();
+		this.db = this.getWritableDatabase();
 		this.putTracksDataToContentValue(name, key, reqTime, distance);
-		db.insertOrThrow(this.MAIN_TBL, null, contentValues);
-		db.close();
-		db = null;
-		contentValues = null;
+		this.db.insertOrThrow(this.MAIN_TBL, null, this.contentValues);
+		this.db.close();
+		this.db = null;
+		this.contentValues = null;
 	}
 
 	// GPS履歴情報テーブルにレコードをインサートする
 	public void insertTrackGPSData(String name, int num, Location location) {
-		this.getWritableDatabase();
+		this.db = this.getWritableDatabase();
 		this.putGPSDataToContentValue(name, num, location);
-		long tetNum = db.insertOrThrow(this.GPS_TBL, null, contentValues);
-		if (tetNum == -1) {
-			Log.d("insertTrackGPSData", "ERROR　tetNum = -1");
+		long retVal = this.db.insertOrThrow(this.GPS_TBL, null, this.contentValues);
+		if (retVal == -1) {
+			Log.d("insertTrackGPSData", "ERROR　Return Value = -1");
 		}
-		db.close();
-		db = null;
-		contentValues = null;
+		this.db.close();
+		this.db = null;
+		this.contentValues = null;
 	}
 
 	// GPS履歴情報テーブルから情報を取得
 	public Cursor getTracksList() {
-		this.getReadableDatabase();
-		return db.query(this.MAIN_TBL, tracksCols, null, null, null, null, null);
+		this.db = this.getReadableDatabase();
+		return this.db.query(this.MAIN_TBL, this.tracksCols, null, null, null, null, null);
 	}
 
 	// GPS履歴情報テーブルから情報を取得
 	public Cursor getTracksList(String key) {
-		this.getReadableDatabase();
-		return db.query(this.MAIN_TBL, tracksCols, "_ID=" + key, null, null, null, null);
+		this.db = this.getReadableDatabase();
+		return this.db.query(this.MAIN_TBL, this.tracksCols, "_ID=" + key, null, null, null, null);
 	}
 
 	// GPS履歴情報テーブルから情報を取得
 	public Cursor getGPSDataList() {
-		this.getReadableDatabase();
-		return db.query(this.GPS_TBL, cols, null, null, null, null, null);
+		this.db = this.getReadableDatabase();
+		return this.db.query(this.GPS_TBL, this.cols, null, null, null, null, null);
 	}
 
 	// GPS履歴情報テーブルから情報を取得
 	public Cursor getGPSDataList(String key) {
-		this.getReadableDatabase();
-		return db.query(this.GPS_TBL, cols, this.TRACKS_NAME + "=" + key, null, null, null, null);
+		this.db = this.getReadableDatabase();
+		return this.db.query(this.GPS_TBL, this.cols, this.TRACKS_NAME + "=" + key, null, null, null, null);
 	}
 	
 	// テーブルからkeyに該当する情報を削除
 	public void deleteDataForKey(String key) {
-		this.getWritableDatabase();
-		db.delete(this.GPS_TBL, this.TRACKS_NAME + "=" + key, null);
-		db.delete(this.MAIN_TBL, this.KEY + "=" + key, null);
-		db.close();
-		db = null;
+		this.db = this.getWritableDatabase();
+		this.db.delete(this.GPS_TBL, this.TRACKS_NAME + "=" + key, null);
+		this.db.delete(this.MAIN_TBL, this.KEY + "=" + key, null);
+		this.db.close();
+		this.db = null;
 	}
 
 }
