@@ -59,7 +59,7 @@ public class RecordActivity extends Activity {
 		// ブロードキャストレシーバの登録
 		this.registBroadcastReceiver();
 
-		boolean isRunning = isServiceRunning(this, GPSCollectService.class);
+		boolean isRunning = this.isServiceRunning(this, GPSCollectService.class);
 		if(isRunning) {
 			this.startView();
 		}
@@ -98,7 +98,6 @@ public class RecordActivity extends Activity {
 			this.stopSound.start();
 			this.stopView();
 		}
-		
 	}
 	
 	private void startViewRecText() {
@@ -139,7 +138,9 @@ public class RecordActivity extends Activity {
 		viewTracksButton.setEnabled(false);
 
 		// GPS情報取得サービス開始
-		this.startService(new Intent(this.getBaseContext(), GPSCollectService.class));
+		Intent serviceIntent = new Intent(this.getBaseContext(), GPSCollectService.class);
+		serviceIntent.setAction("FROM_ACTIVITY");
+		this.startService(serviceIntent);
 //		boolean isRunning = isServiceRunning(this, GPSCollectService.class);
 //		if(!isRunning) {
 //			this.startService(new Intent(this.getBaseContext(), GPSCollectService.class));
@@ -219,18 +220,17 @@ public class RecordActivity extends Activity {
 	 * ブロードキャストレシーバの登録
 	 */
 	private void registBroadcastReceiver() {
-		receiver = new GpsInfoBroadcastReceiver();
+		this.receiver = new GpsInfoBroadcastReceiver();
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction("SEND_START_TIME");
-		this.registerReceiver(receiver, intentFilter);
+		this.registerReceiver(this.receiver, intentFilter);
 	}
 
 	/**
 	 * ブロードキャストレシーバの登録解除
 	 */
 	private void unRegistBroadcastReceiver() {
-		this.unregisterReceiver(receiver);
-		
+		this.unregisterReceiver(this.receiver);
 	}
 
 }

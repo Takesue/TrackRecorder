@@ -58,32 +58,38 @@ containing a value of this type.
         public static final int trackericon=0x7f02000a;
     }
     public static final class id {
-        public static final int chronometer=0x7f080001;
-        public static final int map=0x7f080004;
-        public static final int menu_settings=0x7f080005;
-        public static final int rec=0x7f080000;
-        public static final int recordButton=0x7f080002;
-        public static final int viewTracksbutton=0x7f080003;
+        public static final int chronometer=0x7f090001;
+        public static final int map=0x7f090004;
+        public static final int menu_settings=0x7f090007;
+        public static final int rec=0x7f090000;
+        public static final int recordButton=0x7f090002;
+        public static final int viewTracksbutton=0x7f090003;
+        public static final int widgetButton=0x7f090006;
+        public static final int widgetChronometer=0x7f090005;
     }
     public static final class layout {
         public static final int record=0x7f030000;
         public static final int simple_map=0x7f030001;
         public static final int trackslist=0x7f030002;
+        public static final int widget=0x7f030003;
     }
     public static final class menu {
-        public static final int activity_main=0x7f070000;
+        public static final int activity_main=0x7f080000;
     }
     public static final class raw {
-        public static final int start=0x7f040000;
-        public static final int stop=0x7f040001;
+        public static final int start=0x7f050000;
+        public static final int stop=0x7f050001;
     }
     public static final class string {
-        public static final int app_name=0x7f050000;
-        public static final int menu_settings=0x7f050001;
-        public static final int title_activity_main=0x7f050002;
+        public static final int app_name=0x7f060000;
+        public static final int menu_settings=0x7f060001;
+        public static final int title_activity_main=0x7f060002;
     }
     public static final class style {
-        public static final int AppTheme=0x7f060000;
+        public static final int AppTheme=0x7f070000;
+    }
+    public static final class xml {
+        public static final int widget=0x7f040000;
     }
     public static final class styleable {
         /** Attributes that can be used with a SlideView.

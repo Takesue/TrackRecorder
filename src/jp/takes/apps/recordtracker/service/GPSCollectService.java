@@ -73,11 +73,18 @@ public class GPSCollectService extends Service implements LocationListener{
 
 	}
 
+
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d(GPSCollectService.TAG, "onStartCommand");
 		
-		this.createBroadcastIntent();
+		if ("FROM_WIDGET".equals(intent.getAction())) {
+			// ウィジェットから起動された場合
+			this.createBroadcastIntent();
+		}
+		else if ("FROM_ACTIVITY".equals(intent.getAction())) {
+			this.createBroadcastIntent();
+		}
 		
 		return Service.START_STICKY;
 	}

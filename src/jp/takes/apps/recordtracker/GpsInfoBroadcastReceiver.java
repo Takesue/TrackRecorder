@@ -1,5 +1,6 @@
 package jp.takes.apps.recordtracker;
 
+import jp.takes.apps.recordtracker.widget.ServiceWidget;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -16,7 +17,16 @@ public class GpsInfoBroadcastReceiver extends BroadcastReceiver {
 		Log.d("GpsInfoBroadcastReceiver", startTime);
 		
 		// サービスから受け取った時間をクロノメータの開始時間に設定
-		((RecordActivity)context).mChronometer.setBase(Long.parseLong(startTime));
+		if (context instanceof RecordActivity) {
+			((RecordActivity)context).mChronometer.setBase(Long.parseLong(startTime));
+		}
+		if (context instanceof ServiceWidget) {
+			Log.d("HelloAndroidWidietProvider", "GpsInfoBroadcastReceiver startTime=" + startTime);
+
+			((ServiceWidget)context).chronoTime = Long.parseLong(startTime);
+			((ServiceWidget)context).onStart(intent, this.getResultCode());
+			
+		}
 	}
 
 }
