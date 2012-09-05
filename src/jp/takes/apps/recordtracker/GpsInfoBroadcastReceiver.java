@@ -19,6 +19,10 @@ public class GpsInfoBroadcastReceiver extends BroadcastReceiver {
 		// サービスから受け取った時間をクロノメータの開始時間に設定
 		if (context instanceof RecordActivity) {
 			((RecordActivity)context).mChronometer.setBase(Long.parseLong(startTime));
+			
+			// 画面表示をサービスの状態（起動／停止）に合わせる
+			((RecordActivity)context).refreshView();
+
 		}
 		if (context instanceof ServiceWidget) {
 			Log.d("HelloAndroidWidietProvider", "GpsInfoBroadcastReceiver startTime=" + startTime);

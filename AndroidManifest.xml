@@ -27,7 +27,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-                </intent-filter>
+            </intent-filter>
         </activity>
         <activity android:name=".TracksListActivity" android:screenOrientation="nosensor"></activity>
         <service android:name=".service.GPSCollectService"></service>
@@ -44,8 +44,7 @@
         <service android:name=".widget.ServiceWidget"
             android:exported="false">
             <intent-filter>
-                <action android:name="BUTTON_CLICK_ACTION"></action>
-                <action android:name="FROM_WIDGET"/>
+                <action android:name="BUTTON_CLICK_ACTION"/>
             </intent-filter>
         </service>
         

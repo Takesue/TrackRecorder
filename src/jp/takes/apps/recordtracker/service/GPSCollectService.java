@@ -1,9 +1,3 @@
-/*
- * ★サンプル
- * Androidのサービスを作成してみる。
- * 
- */
-
 package jp.takes.apps.recordtracker.service;
 
 import java.text.SimpleDateFormat;
@@ -12,6 +6,7 @@ import java.util.TimeZone;
 
 import jp.takes.apps.recordtracker.db.TracksDBHelper;
 
+import android.app.Notification;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -25,14 +20,18 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.widget.Toast;
 
+/**
+ * GPS情報を収集／記録するサービス
+ * @author take
+ *
+ */
 public class GPSCollectService extends Service implements LocationListener{
 
 	final static String TAG = "GPSCollectService";
+	public static final String SEND_START_TIME = "SEND_START_TIME";
 	
 	// ロケーションマネージャ
 	private LocationManager locationManager = null;
-	// GPS開始フラグ
-	private boolean isStart = false;
 	// DBヘルパー
 	private TracksDBHelper tracksDB = null;
 	// 開始時間
@@ -51,6 +50,11 @@ public class GPSCollectService extends Service implements LocationListener{
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		
+		// メモリ不足時にKILLされないように対処 （ステータスバーに表示してユーザに明示的になっているということでKILLの対象外になる）
+		Notification lNotification = new Notification(0, "ticker", System.currentTimeMillis());
+		this.startForeground(1, lNotification);
+		
 		Log.d(GPSCollectService.TAG, "onCreate");
 		
 		// タイマー用の開始時間設定
@@ -68,9 +72,6 @@ public class GPSCollectService extends Service implements LocationListener{
 		// ロケーション情報取得開始
 		this.registerLocationListener();
 		
-		// 開始フラグを変更
-		this.isStart = true;
-
 	}
 
 
@@ -85,7 +86,6 @@ public class GPSCollectService extends Service implements LocationListener{
 		else if ("FROM_ACTIVITY".equals(intent.getAction())) {
 			this.createBroadcastIntent();
 		}
-		
 		return Service.START_STICKY;
 	}
 	
@@ -96,7 +96,7 @@ public class GPSCollectService extends Service implements LocationListener{
 		
 		Intent broadcastIntent = new Intent();
 		broadcastIntent.putExtra("starttime", String.valueOf(this.elapsedRealtime));
-		broadcastIntent.setAction("SEND_START_TIME");
+		broadcastIntent.setAction(GPSCollectService.SEND_START_TIME);
 		this.getBaseContext().sendBroadcast(broadcastIntent);
 	}
 
@@ -126,6 +126,13 @@ public class GPSCollectService extends Service implements LocationListener{
 		Log.d("distance", distance);
 		
 		this.tracksDB.insertTracksData(recStart, key, time, "走行時間：" + time.substring(0, 8) + "    走行距離：" + distance + "m");
+		
+		// 停止時もブロードキャストして、停止する旨をウィジェットに通知する。
+		this.createBroadcastIntent();
+		
+		// サービス終了するので、KILL対処を終了する
+		this.stopForeground(true);
+
 	}
 	
 	private String getDistance(String key) {

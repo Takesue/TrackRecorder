@@ -2,26 +2,30 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
-    android:background="#000000">
-    
-    <Chronometer
+    android:background="@drawable/widget_back"
+    android:orientation="vertical" >
+        <Chronometer
         android:id="@+id/widgetChronometer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="center"
-        android:layout_weight="2"
-        android:background="@drawable/stopwatch"
+        android:layout_margin="10dp"
+        android:layout_weight="1"
+        android:background="@drawable/widget_chrono_bg"
         android:format="%s"
         android:gravity="center"
         android:textColor="#000000"
-        android:textSize="10sp" />
-    
-    <Button android:text="Button"
+        android:textSize="18sp" />
+
+    <ImageButton
         android:id="@+id/widgetButton"
         android:layout_width="match_parent"
         android:layout_height="0dip"
-        android:layout_weight="3">
-    </Button>
+        android:layout_margin="6dp"
+        android:layout_weight="1"
+        android:background="@drawable/startbutton_stateful"
+        android:scaleType="fitXY" >
+
+    </ImageButton>
 
 </LinearLayout>

@@ -1,5 +1,6 @@
 package jp.takes.apps.recordtracker;
 
+import java.io.IOException;
 import java.util.List;
 
 import jp.takes.apps.recordtracker.service.GPSCollectService;
@@ -53,19 +54,35 @@ public class RecordActivity extends Activity {
 		
 		// 開始音を生成
 		this.startSound = MediaPlayer.create(this, R.raw.start);
+		
 		// 停止音を生成
 		this.stopSound = MediaPlayer.create(this, R.raw.stop);
 
 		// ブロードキャストレシーバの登録
 		this.registBroadcastReceiver();
+		
+		if (this.isServiceRunning(this, GPSCollectService.class)) {
+			// サービス起動中の場合、サービスにIntentを送信して、サービス情報を受信する
+			Intent serviceIntent = new Intent(this.getBaseContext(), GPSCollectService.class);
+			serviceIntent.setAction("FROM_ACTIVITY");
+			this.startService(serviceIntent);
+		}
 
+	}
+	
+	/**
+	 * 画面表示をサービスの状態（起動／停止）に合わせる
+	 */
+	public void refreshView() {
 		boolean isRunning = this.isServiceRunning(this, GPSCollectService.class);
 		if(isRunning) {
 			this.startView();
 		}
+		else {
+			this.stopView();
+		}
 	}
 	
-
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -89,15 +106,29 @@ public class RecordActivity extends Activity {
 		((Vibrator)this.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(50);
 
 		if(!this.isStart) {
+			// GPS情報取得サービス開始
+			Intent serviceIntent = new Intent(this.getBaseContext(), GPSCollectService.class);
+			serviceIntent.setAction("FROM_ACTIVITY");
+			this.startService(serviceIntent);
+
 			// 開始音を鳴らす
-			this.startSound.start();
-			this.startView();
+			if (this.startSound != null) {
+				this.startSound.start();
+			}
+			
 		}
 		else {
+			// GPS情報取得サービス停止
+			this.stopService(new Intent(this.getBaseContext(), GPSCollectService.class));
+			
 			// 停止音を鳴らす
-			this.stopSound.start();
-			this.stopView();
+			if (this.stopSound != null) {
+				this.stopSound.start();
+			}
 		}
+		
+		// 画面表示をサービスの状態（起動／停止）に合わせる
+		this.refreshView();
 	}
 	
 	private void startViewRecText() {
@@ -137,10 +168,6 @@ public class RecordActivity extends Activity {
 		Button viewTracksButton = (Button)this.findViewById(R.id.viewTracksbutton);
 		viewTracksButton.setEnabled(false);
 
-		// GPS情報取得サービス開始
-		Intent serviceIntent = new Intent(this.getBaseContext(), GPSCollectService.class);
-		serviceIntent.setAction("FROM_ACTIVITY");
-		this.startService(serviceIntent);
 //		boolean isRunning = isServiceRunning(this, GPSCollectService.class);
 //		if(!isRunning) {
 //			this.startService(new Intent(this.getBaseContext(), GPSCollectService.class));
@@ -156,11 +183,6 @@ public class RecordActivity extends Activity {
 	}
 	
 	private void stopView() {
-		// GPS情報取得サービス停止
-		boolean isRunning = isServiceRunning(this, GPSCollectService.class);
-		if(isRunning) {
-			this.stopService(new Intent(this.getBaseContext(), GPSCollectService.class));
-		}
 
 		// カウントアップストップ
 		this.mChronometer.stop();
@@ -222,7 +244,7 @@ public class RecordActivity extends Activity {
 	private void registBroadcastReceiver() {
 		this.receiver = new GpsInfoBroadcastReceiver();
 		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction("SEND_START_TIME");
+		intentFilter.addAction(GPSCollectService.SEND_START_TIME);
 		this.registerReceiver(this.receiver, intentFilter);
 	}
 

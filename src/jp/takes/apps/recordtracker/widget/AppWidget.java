@@ -8,6 +8,9 @@ import android.util.Log;
 
 public class AppWidget extends AppWidgetProvider {
 
+	// Action name ウィジェットからGPSサービスを起動する場合
+	public static final String FIRST_ACTION = "FIRST_ACTION";
+
 	@Override
 	public void onDeleted(Context context, int[] appWidgetIds) {
 		// TODO 自動生成されたメソッド・スタブ
@@ -43,7 +46,7 @@ public class AppWidget extends AppWidgetProvider {
 		Log.d("HelloAndroidWidietProvider", "onUpdate");
 		
 		Intent intent = new Intent(context, ServiceWidget.class);
-		intent.setAction("FIRST_ACTION");
+		intent.setAction(AppWidget.FIRST_ACTION);
 		context.startService(intent);
 
 	}

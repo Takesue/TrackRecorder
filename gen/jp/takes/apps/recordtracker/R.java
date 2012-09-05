@@ -56,6 +56,8 @@ containing a value of this type.
         public static final int stopbutton_stateful=0x7f020008;
         public static final int stopwatch=0x7f020009;
         public static final int trackericon=0x7f02000a;
+        public static final int widget_back=0x7f02000b;
+        public static final int widget_chrono_bg=0x7f02000c;
     }
     public static final class id {
         public static final int chronometer=0x7f090001;
@@ -78,7 +80,9 @@ containing a value of this type.
     }
     public static final class raw {
         public static final int start=0x7f050000;
-        public static final int stop=0x7f050001;
+        public static final int start_wdt=0x7f050001;
+        public static final int stop=0x7f050002;
+        public static final int stop_wdt=0x7f050003;
     }
     public static final class string {
         public static final int app_name=0x7f060000;
